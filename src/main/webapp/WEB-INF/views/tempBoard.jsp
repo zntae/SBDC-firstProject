@@ -27,7 +27,40 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <style>
-h2 {
+a:link {
+	text-decoration: none;
+	color: #000000;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #888888;
+}
+
+a:active {
+	text-decoration: none;
+	color: #00a0a0;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #008080;
+}
+
+<!--
+	   a:link 클릭하지 않았을 때 링크 상태
+
+       a:visited 한번 클릭했거나 들어가보았던 링크 상태
+
+       a:active 링크 부분에서 마우스를 누르고 있는 상태
+
+       a:hover 링크를 클릭하려고 마우스를 가져갔을 때 상태
+
+       text-decoration ->underline ; 밑줄, none ; 밑줄 없음
+
+ -->
+ 
+h2{
 	color: #008080;
 	text-align: center;
 	margin: 10px 5px 30px;
@@ -35,6 +68,10 @@ h2 {
 
 table {
 	width: 100%;
+}
+
+thead{
+		text-align : center;
 }
 
 #outter {
@@ -62,6 +99,17 @@ input[type=button] {
 
 .info:hover {
   background: #008080;
+  color: white;
+}
+
+/* 수정삭제 버튼 */
+.info-a {
+  border-color: #000000;
+  color: #000000;
+}
+
+.info-a:hover {
+  background: #000000;
   color: white;
 }
 
@@ -267,7 +315,7 @@ ul#menu {
 				
 				
 			});
-
+	
 </script>
 
 </head>
@@ -316,13 +364,12 @@ ul#menu {
 		</div>
 	</div>
 
-	<div class="container" style="margin-top: 30px">
+	<div class="container" style="margin-top: 30px" >
 		<div class="row">
 			<div class="col-sm-12">
-				<h2 >임시저장된 게시물</h2>
+				<h2>임시저장된 게시물</h2>
 				
 				<div id="outter">
-
 					<!-- 목록시작 -->
 
 					<div class="card mb-12">
@@ -377,26 +424,21 @@ ul#menu {
 								
 								<!-- 글목록 -->
 								<!-- 테이블 디자인 클래스 적용 확인 class="table table-striped table-bordered" -->
-								<table id="dataTable" border="1">
+								<table class="table table-striped table-bordered" id="dataTable" border="1">
 									<thead>
 										<tr>
-											<td>글번호</td>
-											<td width="50%">제목</td>
-											<td>작성자</td>
+											<td>글번호  </td>
+											<td width="50%">제목  </td>
+											<td>작성자  </td>
 											<!-- <td>등록일</td>
 											<td>조회수</td> -->
 										</tr>
 									<tbody>
-										<%-- <c:if test="${status eq '작성중'}"> --%>
+										<%-- <c:if test="${status eq 'T'}"> --%>
 										<c:forEach items="${viewAll }" var="list">
 											<tr>
 												<td>${list.idx }</td>
 												<td><a href='view?idx=${list.idx }'>${list.title }</a>
-
-													<!-- 삭제 버튼 --> <input type="button"
-													class="btn btn-btnoutline-info" id="restoreBtn" value="삭제"
-													style="float: right;" onclick="location.href='/delete'">
-												</td>
 												<td>${list.writer }</td>
 											<%-- 	<td><fmt:formatDate value="${list.reg_date }"
 														pattern="yyyy.MM.dd" /></td>
@@ -407,13 +449,20 @@ ul#menu {
 									</tbody>
 								</table>
 
+
 							</div>
 						</div>
 					</div>
 
-					<!-- 글쓰기 버튼 -->
-					<input type="button" class="btn btn-outline-info" id="writeBtn"
-						value="글쓰기" style="float: right;" onclick="location.href='/write'"><br>
+					<div class="col">
+						<div>
+							<!-- 글쓰기 버튼 -->
+							<input type="button" class="btn btn-outline-info" id="writeBtn"
+								value="글쓰기" style="float: right;"
+								onclick="location.href='/write'">
+						</div>
+
+					</div>
 
 					<!-- 페이지네이션 -->
 					<div style="display: block; text-align: center;">
