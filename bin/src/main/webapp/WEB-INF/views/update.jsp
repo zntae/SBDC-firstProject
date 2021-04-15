@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,65 +10,13 @@
 <meta name="csrf-param" content="authenticity_token" />
 <meta name="csrf-token"
 	content="FqXMAnwaMTsf5yfUvdmWufX8XqLazGL59qUM3IHfb0j1fWYCDNuv4bISmEPOR4/eBdk06e7VYJT12gH+EdiXwg==" />
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel='stylesheet'
 	href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
 
-
-<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table-locale-all.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
-
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"> </script>
-	
 <style>
-
-h2 {
-	color: #008080;
-	text-align: center;
-	margin: 10px 5px 30px;
-}
-
-table {
-	width: 100%;
-}
-
-#outter {
-	display: block;
-	width: 100%;
-	margin: auto;
-}
-
-a {
-	text-decoration: none;
-}
-
-input[type=button] {
-	padding: 10px 25px;
-	text-decoration: none;
-	margin: 4px 2px;
-	cursor: pointer;
-}
-
-/* outline 버튼 */
-.info {
-  border-color: #008080;
-  color: #008080;
-}
-
-.info:hover {
-  background: #008080;
-  color: white;
-}
-
 body {
 	font-family: arial;
 }
@@ -231,54 +175,46 @@ ul#menu {
 	width: 100% !important;
 }
 </style>
-
-<script>
-	function selChange() {
-		var sel = document.getElementById('cntPerPage').value;
-		location.href = "boardPage?nowPage=${paging.nowPage}&cntPerPage=" + sel;
-	}
-</script>
-
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				
-				// Sorting
-				$(document).ready(function () {
-				$('#dataTable').DataTable({
-				"ordering": false // false to disable sorting (or any other option)
-				});
-				$('.dataTables_length').addClass('bs-select');
-				});
-				
-				
 				$("#writeBtn").click(function() {
 					location.href = "write";
 				})
 				$.ajax({
-					url : "boardPage",
+					url : "boardList",
 					success : function(result) {
 						console.log(result);
 						var html = "";
 						result.forEach(function(item) {
 							html += "<tr> <td><a href = 'view?idx=" + item.idx
-									+ "'>" + item.title + "</a>"
-									+ "</td> </tr>"
+									+ "'>" + item.title + "</a>" + "</td>"
+									+ "<td>" + item.contents + "</tr>"
 						})
-						$("#listArea").append(html);
 						$("#listArea1").append(html);
 						$("#listArea2").append(html);
 						$("#listArea3").append(html);
 						$('#example').DataTable();
 					}
 				});
-
-			}
-
-	);
-
+				$("#deleteBtn").click(function() {
+					location.href = "write";
+				})
+				$("#updateBtn").click(function() {
+					location.href = "update";
+				})
+			});
+	/* 
+	 html+= "<tr> <td><a href = 'view?idx=" + item.idx + "'>" + item.title + "</a></td> </tr>"
+	 + "<button type='button' class='btn btn-primary' align='right' id = 'deleteBtn'>글삭제</button></td> </tr>"
+	 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+	 */
 </script>
 
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 	<header class="navbar navbar-custom">
@@ -324,125 +260,49 @@ ul#menu {
 			</div>
 		</div>
 	</div>
-
-
 	<div class="container" style="margin-top: 30px">
 		<div class="row">
-			<div class="col-lg-12">
-				<h2 >완료된 게시물</h2>
-				
-				<div id="outter">
-
-					<!-- 목록시작 -->
-
-					<div class="card mb-12">
-						<div class="card-header">
-							<i class="fas fa-table mr-3"> 
-							
-							<!-- 검색 -->
-								<div style="margin:10px 0 -10px" class="container">
-									<div class="row">
-										<div style="margin:0 1px" class="span2">
-											<select class="form-control" name="searchType">
-												<option value="t"
-													<c:out value="${searchType eq 't' ? 'selected' : ''}"/>>제목</option>
-												<option value="w"
-													<c:out value="${searchType eq 'w' ? 'selected' : ''}"/>>작성자</option>
-											</select>
-										</div>
-
-										<div style="margin:0 5px" class="span8">
-											<input type="text" class="form-control" name="keyword"
-												id="keywordInput" value="${keyword}" />
-										</div>
-
-										<div class="span2">
-											<button id="searchBtn" type="submit"
-												class="btn btn-outline-info">검색</button>
-										</div>
-									</div>
-								</div>
-							</i>
-						</div>
-						<!-- 검색 끝-->
-
-						<div class="card-body">
-							<div class="table-responsive">
-
-								<!-- 글갯수 옵션 -->
-								<div style="float: right;">
-									<select id="cntPerPage" name="sel" onchange="selChange()">
-										<option value="5"
-											<c:if test="${paging.cntPerPage == 5}">selected</c:if>>5줄
-											보기</option>
-										<option value="10"
-											<c:if test="${paging.cntPerPage == 10}">selected</c:if>>10줄
-											보기</option>
-									</select>
-								</div>
-								<!-- 옵션선택 끝 -->
-
-								<!-- 글목록 -->
-								<!-- 테이블 디자인 클래스 적용 확인 class="table table-striped table-bordered" -->
-								<table id="dataTable" border="1">
-									<tr>
-										<td>글번호</td>
-										<td width="50%">제목</td>
-										<td>작성자</td>
-									<!-- 	<td>등록일</td>
-										<td>조회수</td> -->
-									</tr>
-									<%-- <c:if test="${status eq '완료'}"> --%>
-										<c:forEach items="${viewAll }" var="list">
-											<tr>
-												<td>${list.idx }</td>
-												<td><a href='view?idx=${list.idx }'>${list.title }</a></td>
-												<td>${list.writer }</td>
-												<%-- <td><fmt:formatDate value="${list.reg_date }"
-														pattern="yyyy.MM.dd" /></td>
-												<td>${list.count }</td> --%>
-											</tr>
-										</c:forEach>
-									<%-- </c:if> --%>
-								</table>
-								
-							</div>
-						</div>
-					</div>
-
-					<!-- 글쓰기 버튼 -->
-					<input type="button" class="btn btn-outline-info" id="writeBtn"
-						value="글쓰기" style="float: right;" onclick="location.href='/write'"><br>
-
-					<!-- 페이지네이션 -->
-					<div style="display: block; text-align: center;">
-						<c:if test="${paging.startPage != 1 }">
-							<a
-								href="/boardPage?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}">&lt;</a>
-						</c:if>
-						<c:forEach begin="${paging.startPage }" end="${paging.endPage }"
-							var="p">
-							<c:choose>
-								<c:when test="${p == paging.nowPage }">
-									<b>${p }</b>
-								</c:when>
-								<c:when test="${p != paging.nowPage }">
-									<a
-										href="/boardPage?nowPage=${p }&cntPerPage=${paging.cntPerPage}">${p }</a>
-								</c:when>
-							</c:choose>
-						</c:forEach>
-						<c:if test="${paging.endPage != paging.lastPage}">
-							<a
-								href="/boardPage?nowPage=${paging.endPage+1 }&cntPerPage=${paging.cntPerPage}">&gt;</a>
-						</c:if>
-					</div>
+			<div class="col-sm-10">
+				<div class="form-group">
+					<h3>
+						<a
+							style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; font-family: arial; color: teal">글
+							수정하기</a>
+					</h3>
 				</div>
-
-
+				<form action="writeAction" method="POST" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="usr">제목</label>
+							<input type="text" value='title' class="form-control" id="title" name="title">
+					</div>
+					<!-- 새로 -->
+					<div class="form-group">
+						<label for="usr">작성자</label>
+							<input type="text" value='writer' class="form-control" id="writer" name="writer">
+					</div>
+					<!-- 새로 -->
+					<div class="form-group">
+						<input type="file" class="form-control-file border" name="file">
+					</div>
+					<div class="form-group">
+						<label for="comment">내용</label>
+							<textarea class="form-control" rows="5"  value='contents' id="contents" name="contents"></textarea>
+					</div>
+					<div class=”btn-group” role=”group” aria-label=”…”>
+						<div class="form-row float-left">
+						<button type=submit class="btn btn-info">수정하기</button>
+					 	</div>
+						<div class="form-row float-right">
+						<button type=submit class="btn btn-info" id="tempSave" >임시저장</button>
+					 	</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+	
+		
+	
 	<footer class="footer">
 		<p style="color: black; text-align: left;">
 		<div

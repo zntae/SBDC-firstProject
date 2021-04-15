@@ -20,39 +20,75 @@ CREATE TABLE `tb_board` (
   PRIMARY KEY (`idx`));
  -->
 <mapper namespace="com.web.mapper.BoardMapper">
+
     <insert id="addBoard">
 		INSERT INTO 
-	    	tb_board
+	    	board
 	   			(
-					title,
-					image,
-					contents
+	               title,
+	               contents,
+	               writer,              
+	               reg_date,
+	               status,
+	               file_path
 				)
 	    	VALUES
 	   			(
 	   				#{title},
-	   				#{image},
-	   				#{contents}
+	   				#{contents},
+	   				'writer',
+	   				sysdate,
+	   				'C',
+	   				#{file_path}	
+	   				
 				)
     </insert>
+    
+    <update id="boardDelete">
+    	UPDATE BOARD
+		SET STATUS='D', 
+       		ISDELETE=1
+		WHERE IDX = #{idx}
+    
+    
+    </update>
+    
 	<select id="getBoard" resultType="com.web.domain.Board">
 		SELECT
-			idx, title, image, contents
+			   idx,
+               title,
+               contents,
+               writer,              
+               count,
+               reg_date,
+               status,
+               isdelete,
+               file_path
 		FROM
-			tb_board
-		ORDER BY idx asc
+			board
+		ORDER BY reg_date desc, idx desc
 	</select>
+	
 	<select id="getBoardOne" resultType="com.web.domain.Board">
 		SELECT
-			idx, title, image, contents
+				idx,
+               title,
+               contents,
+               writer,              
+               count,
+               reg_date,
+               status,
+               isdelete,
+               file_path
 		FROM
-			tb_board
+			board
 		WHERE
 			idx = #{idx}
 	</select>
+	
     <insert id="addReply">
 		INSERT INTO 
-	    	tb_reply
+	    	reply
 	   			(
 					board_idx,
 					reply_idx,
@@ -65,13 +101,32 @@ CREATE TABLE `tb_board` (
 	   				#{contents}
 				)
     </insert>
+    
 	<select id="getReply" resultType="com.web.domain.Reply">
 		SELECT
 			idx, board_idx as boardIdx, reply_idx as replyIdx, contents
 		FROM
-			tb_reply
+			reply
 		WHERE
 			board_idx = #{boardIdx}
 		order by reply_idx asc
+	</select>
+	<!-- 총 게시글 갯수 출력 -->
+	<select id="countBoard" resultType="int">
+	SELECT COUNT(*) FROM BOARD
+	</select>
+
+<!-- 페이징 처리 후 게시글 조회 -->
+	<select id="selectBoard" resultType="com.web.domain.Board">
+	SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (
+						SELECT * 
+						FROM BOARD 
+						ORDER BY idx ASC 
+						) A
+				)
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
 </mapper>

@@ -34,12 +34,21 @@
 		</dependency>
 		
 		
-		<!-- Mysql Connector -->
+		<!-- H2 Connect -->
 		<dependency>
+        	<groupId>com.h2database</groupId>
+        	<artifactId>h2</artifactId>
+        	<scope>runtime</scope>
+        	<version>1.4.200</version>
+    	</dependency>
+		
+		<!-- Mysql Connector -->
+	<!-- 	<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.11</version>
-		</dependency>
+		</dependency> -->
+		
 		
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -64,12 +73,16 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
-		
 		<!-- Tiles -->
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-jsp</artifactId>
 			<version>3.0.8</version>
+		</dependency>
+
+		<dependency>
+    		<groupId>org.apache.tomcat.embed</groupId>
+    		<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
 	</dependencies>
 	<repositories>
