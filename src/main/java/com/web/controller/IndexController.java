@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,7 +89,7 @@ public class IndexController {
 		}
 
 		s.addBoard(new Board(0, title, contents, file.getOriginalFilename(), 0, PATH , PATH, 0, PATH));
-		return "board";
+		return "index";
 	}
 
 	@RequestMapping(value = "/boardList", method = RequestMethod.GET)
@@ -121,12 +122,11 @@ public class IndexController {
 		s.boardDelete(idx);
 		return "test";
 	}
-	 @RequestMapping(value= "/saveBoard", method = RequestMethod.GET)
+	 @GetMapping(value= "saveBoard")	 
 		public String saveBoard(PagingVO vo, Model model
 				, @RequestParam(value="nowPage", required=false)String nowPage
 				, @RequestParam(value="cntPerPage", required=false)String cntPerPage) {
-			
-			int total = s.countBoard();
+			int total = s.countBoard();			
 			if (nowPage == null && cntPerPage == null) {
 				nowPage = "1";
 				cntPerPage = "5";
@@ -140,7 +140,7 @@ public class IndexController {
 			model.addAttribute("viewAll", s.selectBoard(vo));
 			return "saveBoard";
 		}
-	 @RequestMapping(value= "/tempBoard", method = RequestMethod.GET)
+	 @GetMapping(value= "/tempBoard")
 		public String tempBoard(PagingVO vo, Model model
 				, @RequestParam(value="nowPage", required=false)String nowPage
 				, @RequestParam(value="cntPerPage", required=false)String cntPerPage) {
