@@ -23,13 +23,15 @@
 body {
 	font-family: arial;
 }
-
+.container-fluid {
+	font-family: stencil;
+	font-size: 30px;
+}
 .navbar-custom {
 	background-color: white;
 	border-bottom: thick double #8ca8ab;
 	height: 100px;
 }
-
 .bd-navbar {
 	position: sticky;
 	top: 0;
@@ -38,7 +40,6 @@ body {
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0
 		rgba(0, 0, 0, .1);
 }
-
 .bd-sidebar {
 	position: fixed;
 	top: 6.3rem;
@@ -50,78 +51,67 @@ body {
 	min-width: 160px;
 	max-width: 290px;
 }
-
 .bd-sidebar .nav {
 	display: block;
 }
-
 .bd-sidebar .nav>li>a {
 	display: block;
 	padding: 0.25rem 4.5rem;
 	font-size: 90%;
 }
-
 .footer {
 	width: 100%;
 	height: 100px;
+	margin-left: 130px;
 	position: absolute;
 	bottom: 0;
 	text-align: center;
 	color: black;
 }
-
 div#head {
 	position: absolute;
 	left: 40%;
 	top: 8%;
 	color: #19555c;
 }
-
 div#user {
 	position: absolute;
 	color: teal;
 	right: 3%;
-	top: 40%;
+	top: 30%;
 	right: 3%;
 }
-
 ul#menu {
 	position: absolute;
 	top: 8%
 }
-
 .dropdown {
 	background-color: white;
 }
-
 .dropdown-menu {
 	color: white;
 	border: thick double #8ca8ab;
 	background-color: #ffffff;
 }
-
 .dropdown-menu li a {
 	text-decoration: none;
 	display: block;
 	color: #000;
 	padding: 8px 15px 8px 15px;
 }
-
 .dropdown-menu a:hover {
 	color: #ffffff !important;
 	background: teal;
 	border-color: #42423e;
 }
-
 .cardwrapper {
 	display: flex;
 	position: relative;
 	width: 70%;
-	margin-left: 300px;
-	padding: 6rem 1rem 3rem 12rem;
+	margin-left: 330px;
+	padding: 3rem 1rem 3rem 12rem;
 	justify-content: space-between;
 }
-
 .cardwrap {
 	display: flex;
 	width: 350px;
@@ -131,7 +121,6 @@ ul#menu {
 	border-radius: 2rem;
 	cursor: pointer;
 }
-
 .boardwrap {
 	width: 100%;
 	/* height: auto; */
@@ -143,12 +132,10 @@ ul#menu {
 	/*border-bottom: solid 1px;*/
 	border-radius: 0 0 1rem 1rem;
 }
-
 .boardwrap:hover {
 	background-color: #ffffff;
 	opacity: 0.5;
 }
-
 .textwrap {
 	width: 100%;
 	height: 5rem;
@@ -157,7 +144,6 @@ ul#menu {
 	background: #4e859c;
 	border-radius: 1rem 1rem 0 0;
 }
-
 .left-text {
 	text-align: center;
 	font-size: large;
@@ -165,7 +151,6 @@ ul#menu {
 	align-items: center;
 	color: white;
 }
-
 #tempCount {
 	text-align: center;
 	font-size: large;
@@ -187,8 +172,6 @@ ul#menu {
 	display: flex;
 	align-items: center;
 }
-
-
 .table {
 	width: 100% !important;
 }
@@ -207,29 +190,29 @@ ul#menu {
 						var saveHtml = "";
 						var delHtml = "";
 						result.temp.forEach(function(item) {
-							tempHtml += "<tr> <td><a href = 'view?idx=" + item.idx
-									+ "'>" + item.title + "</a>" + "</td>"
-									+ "<td>" + item.writer + "</td></tr>"
+							tempHtml += "<tr> <td><a href = 'view?idx="
+									+ item.idx + "'>" + item.title + "</a>"
+									+ "</td>" + "<td>" + item.writer
+									+ "</td></tr>"
 						})
 						result.save.forEach(function(item) {
-							saveHtml += "<tr> <td><a href = 'view?idx=" + item.idx
-									+ "'>" + item.title + "</a>" + "</td>"
-									+ "<td>" + item.writer + "</td></tr>"
+							saveHtml += "<tr> <td><a href = 'view?idx="
+									+ item.idx + "'>" + item.title + "</a>"
+									+ "</td>" + "<td>" + item.writer
+									+ "</td></tr>"
 						})
 						result.del.forEach(function(item) {
-							delHtml += "<tr> <td><a href = 'view?idx=" + item.idx
-									+ "'>" + item.title + "</a>" + "</td>"
-									+ "<td>" + item.writer + "</td></tr>"
+							delHtml += "<tr> <td><a href = 'view?idx="
+									+ item.idx + "'>" + item.title + "</a>"
+									+ "</td>" + "<td>" + item.writer
+									+ "</td></tr>"
 						})
 						$("#listArea1").append(tempHtml);
 						$("#listArea2").append(saveHtml);
 						$("#listArea3").append(delHtml);
 						$('#example').DataTable();
 					}
-				});	
-				
-				
-				
+				});
 				$.ajax({
 					url : "countDashBoard",
 					success : function(result) {
@@ -255,14 +238,18 @@ ul#menu {
 					src="https://img.etnews.com/photonews/2012/1370528_20201230091413_961_0001.jpg">
 			</div>
 			<div id="head">
-				<h3>
+				<h2 style="font-family: stencil">
 					<a href="index"
 						style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; color: #19555c">
-						SBDC 21년도 게시판</a>
-				</h3>
+						2021 SBDC Board Project</a>
+				</h2>
 			</div>
-			<div id="user">
-				<h5>임시사용자</h5>
+			<div id="user" onclick="alert('임시 사용자입니다.')" style="cursor:pointer">
+					<img alt="user" width="50" height="50"
+					
+					src="https://i.pinimg.com/736x/3f/94/70/3f9470b34a8e3f526dbdb022f9f19cf7.jpg"
+					>
+				USER
 			</div>
 		</a>
 
@@ -273,18 +260,17 @@ ul#menu {
 			<div class="col-3 bd-sidebar">
 				<ul class="nav" id="menu">
 					<li class="nav-item"><a class="nav-link" href="index"
-						style="color: black; font-size: 20px;">홈</a></li>
+						style="color: black;">Home</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button" aria-haspopup="true"
-						aria-expanded="false" style="color: black; font-size: 20px;">게시판
-					</a>
+						aria-expanded="false" style="color: black;">Board </a>
 						<ul class="dropdown-menu">
 							<li style="text-align: center"><a href="saveBoard"
-								style="color: black">완료 게시판</a></li>
+								style="color: black">Complete Board</a></li>
 							<li style="text-align: center"><a href="tempBoard"
-								style="color: black">임시저장 게시판</a></li>
+								style="color: black">Archive</a></li>
 							<li style="text-align: center"><a href="deleteBoard"
-								style="color: black">삭제 게시판</a></li>
+								style="color: black">Delete Board</a></li>
 						</ul></li>
 				</ul>
 				<br>
@@ -294,26 +280,26 @@ ul#menu {
 
 	<div>
 		<p style="margin-left: 300px">
-		<h2 style="color: teal; margin-left: 10em;">Dashboard</h2>
+		<h1 style="color: teal; text-align: center; margin: 60px 0 0 260px; font-family: stencil;">Dashboard</h1>
 		</p>
 	</div>
 	<div class="cardwrapper">
 		<!--  카드 컴포넌트 -->
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='tempBoard'">
-				<div class="left-text">임시저장</div>
-				<div id="tempCount">건수 : </div>
+				<div class="left-text">Archive</div>
+				<div id="tempCount">Count : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='tempBoard'">
-				<div class="container" >
+				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"
 								class="display" style="width: 50%">
 								<thead>
 									<tr>
-										<th>제목</th>
-										<th>작성자</th>
+										<th>Title</th>
+										<th>Writer</th>
 									</tr>
 								</thead>
 								<tbody id="listArea1">
@@ -329,19 +315,19 @@ ul#menu {
 		<!--  카드 컴포넌트 -->
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='saveBoard'">
-				<div class="left-text">완료</div>
-				<div id="saveCount">건수 : </div>
+				<div class="left-text">Complete</div>
+				<div id="saveCount">Count : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='saveBoard'">
-				<div class="container" >
+				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"
 								class="display" style="width: 50%">
 								<thead>
 									<tr>
-										<th>제목</th>
-										<th>작성자</th>
+										<th>Title</th>
+										<th>Writer</th>
 									</tr>
 								</thead>
 								<tbody id="listArea2">
@@ -357,20 +343,20 @@ ul#menu {
 		<!--  카드 컴포넌트 -->
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='deleteBoard'">
-				<div class="left-text">삭제</div>
-				<div id="deleteCount">건수 : </div>
+				<div class="left-text">Delete</div>
+				<div id="deleteCount">Count : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='deleteBoard'">
 
-				<div class="container" >
+				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"
 								class="display" style="width: 50%">
 								<thead>
 									<tr>
-										<th>제목</th>
-										<th>작성자</th>
+										<th>Title</th>
+										<th>Writer</th>
 									</tr>
 								</thead>
 								<tbody id="listArea3">

@@ -27,7 +27,19 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <style>
-
+table {
+  width: 100%;
+  counter-reset: row-num -1;
+}
+table tr {
+  counter-increment: row-num;
+}
+table tr td:first-child::before {
+    content: counter(row-num);
+}
+tbody tr:hover {
+  font-size:1.1em; 
+}
 div#boardlists{
 	width: 120%;
 	display: flex;
@@ -36,38 +48,28 @@ div#boardlists{
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.15);
 	
 }
-
 a:link {
 	text-decoration: none;
 	color: #000000;
 }
-
 a:visited {
 	text-decoration: none;
 	color: #888888;
 }
-
 a:active {
 	text-decoration: none;
 	color: #00a0a0;
 }
-
 a:hover {
 	text-decoration: none;
 	color: #008080;
 }
-
 /*
 	   a:link 클릭하지 않았을 때 링크 상태
-
        a:visited 한번 클릭했거나 들어가보았던 링크 상태
-
        a:active 링크 부분에서 마우스를 누르고 있는 상태
-
        a:hover 링크를 클릭하려고 마우스를 가져갔을 때 상태
-
        text-decoration ->underline ; 밑줄, none ; 밑줄 없음
-
  */
  
 h2{
@@ -75,53 +77,48 @@ h2{
 	text-align: center;
 	margin: 10px 5px 30px;
 }
-
-table {
-	width: 100%;
-}
-
 thead{
 		text-align : center;
 }
-
+tbody
+{
+		text-align : center;
+}
 #outter {
 	display: block;
 	width: 100%;
 	margin: auto;
 }
-
 a {
 	text-decoration: none;
 }
-
 input[type=button] {
 	padding: 10px 25px;
 	text-decoration: none;
 	margin: 4px 2px;
 	cursor: pointer;
 }
-
 /* outline 버튼 */
 .info {
   border-color: #008080;
   color: #008080;
 }
-
 .info:hover {
   background: #008080;
   color: white;
 }
-
 body {
 	font-family: arial;
 }
-
+.container-fluid {
+	font-family: stencil;
+	font-size: 30px;
+}
 .navbar-custom {
 	background-color: white;
 	border-bottom: thick double #8ca8ab;
 	height: 100px;
 }
-
 .bd-navbar {
 	position: sticky;
 	top: 0;
@@ -130,7 +127,6 @@ body {
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0
 		rgba(0, 0, 0, .1);
 }
-
 .bd-sidebar {
 	position: fixed;
 	top: 6.3rem;
@@ -142,78 +138,67 @@ body {
 	min-width: 160px;
 	max-width: 290px;
 }
-
 .bd-sidebar .nav {
 	display: block;
 }
-
 .bd-sidebar .nav>li>a {
 	display: block;
 	padding: 0.25rem 4.5rem;
 	font-size: 90%;
 }
-
 .footer {
 	width: 100%;
 	height: 100px;
+	margin-left: 130px;
 	position: absolute;
 	bottom: 0;
 	text-align: center;
 	color: black;
 }
-
 div#head {
 	position: absolute;
 	left: 40%;
 	top: 8%;
 	color: #19555c;
 }
-
 div#user {
 	position: absolute;
 	color: teal;
 	right: 3%;
-	top: 40%;
+	top: 30%;
 	right: 3%;
 }
-
 ul#menu {
 	position: absolute;
 	top: 8%
 }
-
 .dropdown {
 	background-color: white;
 }
-
 .dropdown-menu {
 	color: white;
 	border: thick double #8ca8ab;
 	background-color: #ffffff;
 }
-
 .dropdown-menu li a {
 	text-decoration: none;
 	display: block;
 	color: #000;
 	padding: 8px 15px 8px 15px;
 }
-
 .dropdown-menu a:hover {
 	color: #ffffff !important;
 	background: teal;
 	border-color: #42423e;
 }
-
 .cardwrapper {
 	display: flex;
 	position: relative;
 	width: 70%;
-	margin-left: 300px;
-	padding: 6rem 1rem 3rem 12rem;
+	margin-left: 330px;
+	padding: 3rem 1rem 3rem 12rem;
 	justify-content: space-between;
 }
-
 .cardwrap {
 	display: flex;
 	width: 350px;
@@ -223,7 +208,6 @@ ul#menu {
 	border-radius: 2rem;
 	cursor: pointer;
 }
-
 .boardwrap {
 	width: 100%;
 	/* height: auto; */
@@ -235,12 +219,10 @@ ul#menu {
 	/*border-bottom: solid 1px;*/
 	border-radius: 0 0 1rem 1rem;
 }
-
 .boardwrap:hover {
 	background-color: #ffffff;
 	opacity: 0.5;
 }
-
 .textwrap {
 	width: 100%;
 	height: 5rem;
@@ -249,7 +231,6 @@ ul#menu {
 	background: #4e859c;
 	border-radius: 1rem 1rem 0 0;
 }
-
 .left-text {
 	text-align: center;
 	font-size: large;
@@ -257,22 +238,33 @@ ul#menu {
 	align-items: center;
 	color: white;
 }
-
-.right-text {
+#tempCount {
 	text-align: center;
 	font-size: large;
 	color: white;
 	display: flex;
 	align-items: center;
 }
-
+#saveCount {
+	text-align: center;
+	font-size: large;
+	color: white;
+	display: flex;
+	align-items: center;
+}
+#deleteCount {
+	text-align: center;
+	font-size: large;
+	color: white;
+	display: flex;
+	align-items: center;
+}
 .table {
 	width: 100% !important;
 }
 </style>
 
 <script>
-
 	function selChange() {
 		var sel = document.getElementById('cntPerPage').value;
 		location.href = "tempBoard?nowPage=${paging.nowPage}&cntPerPage=" + sel;
@@ -312,30 +304,9 @@ ul#menu {
 					if(deleteYN == true){
 						
 					location.href = "delete";
-
 					}
-
 				})
 				
-					$("#searchBtn").click(function() {
-					alert($("#searchForm").val());
-					$.ajax({
-						url : "SearchboardList",
-						data : { keywordInput : $("#keywordInput").val(),
-							     searchType : $("#searchForm").val()}
-					}).done((result)=>{
-						var html333 = "<table> <tbody>";
-						result.map(x=>{
-							html333 +=	"<tr> <td>"+x.idx+"</td>"+ "<td>" +x.title + "</td>" + "<td>" + x.writer + "</td></tr>"
-						})
-					
-						html333 += "</tbody> </table>";
-						$("#tbody-tt").html(html333);
-					
-						
-						});				
-
-				});
 				$("#restoreBtn").click(function() {
 					location.href = "restore";
 					
@@ -348,21 +319,25 @@ ul#menu {
 
 </head>
 <body>
-<header class="navbar navbar-custom">
+	<header class="navbar navbar-custom">
 		<a class="navbar-brand" href="index">
 			<div>
 				<img class="sbdc" alt="SBDC" width="250" height="45"
 					src="https://img.etnews.com/photonews/2012/1370528_20201230091413_961_0001.jpg">
 			</div>
 			<div id="head">
-				<h3>
+				<h2 style="font-family: stencil">
 					<a href="index"
 						style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; color: #19555c">
-						SBDC 21년도 게시판</a>
-				</h3>
+						2021 SBDC Board Project</a>
+				</h2>
 			</div>
-			<div id="user">
-				<h5>임시사용자</h5>
+			<div id="user" onclick="alert('임시 사용자입니다.')" style="cursor:pointer">
+					<img alt="user" width="50" height="50"
+					
+					src="https://i.pinimg.com/736x/3f/94/70/3f9470b34a8e3f526dbdb022f9f19cf7.jpg"
+					>
+				USER
 			</div>
 		</a>
 
@@ -373,29 +348,30 @@ ul#menu {
 			<div class="col-3 bd-sidebar">
 				<ul class="nav" id="menu">
 					<li class="nav-item"><a class="nav-link" href="index"
-						style="color: black; font-size: 20px;">홈</a></li>
+						style="color: black;">Home</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button" aria-haspopup="true"
-						aria-expanded="false" style="color: black; font-size: 20px;">게시판
-					</a>
+						aria-expanded="false" style="color: black;">Board </a>
 						<ul class="dropdown-menu">
 							<li style="text-align: center"><a href="saveBoard"
-								style="color: black">완료 게시판</a></li>
+								style="color: black">Complete Board</a></li>
 							<li style="text-align: center"><a href="tempBoard"
-								style="color: black">임시저장 게시판</a></li>
+								style="color: black">Archive</a></li>
 							<li style="text-align: center"><a href="deleteBoard"
-								style="color: black">삭제 게시판</a></li>
+								style="color: black">Delete Board</a></li>
 						</ul></li>
 				</ul>
 				<br>
 			</div>
 		</div>
 	</div>
-
 	<div class="container" style="margin-top: 30px">
 		<div class="row">
 			<div class="col-sm-12">
-				<h2>임시저장된 게시물</h2>
+					<h3>
+						<a
+							style="color: teal; text-align: center; margin: 60px 0 100px 550px; font-family: stencil;">Archive</a>
+					</h3>
 				
 				<div id="outter">
 					<!-- 목록시작 -->
@@ -404,19 +380,16 @@ ul#menu {
 						<div class="card-header">
 							<i class="fas fa-table mr-3"> 
 							
-					<!-- 검색 -->
+							<!-- 검색 -->
 								<div style="margin:10px 0 -10px" class="container">
 									<div class="row">
 										<div style="margin:0 1px" class="span2">
-											
-											<select id="searchForm" class="form-control" name="searchType">
+											<select class="form-control" name="searchType">
 												<option value="t"
 													<c:out value="${searchType eq 't' ? 'selected' : ''}"/>>제목</option>
 												<option value="w"
 													<c:out value="${searchType eq 'w' ? 'selected' : ''}"/>>작성자</option>
 											</select>
-										
-											
 										</div>
 
 										<div style="margin:0 5px" class="span8">
@@ -425,9 +398,8 @@ ul#menu {
 										</div>
 
 										<div class="span2">
-											<button id="searchBtn" type="submit" 
+											<button id="searchBtn" type="submit"
 												class="btn btn-outline-info">검색</button>
-												
 										</div>
 									</div>
 								</div>
@@ -459,9 +431,9 @@ ul#menu {
 								<table class="table table-striped table-bordered" id="dataTable" border="1">
 									<thead>
 										<tr>
-											<td>글번호  </td>
-											<td width="50%">제목  </td>
-											<td>작성자  </td>
+											<th>번호</th>
+											<th width="50%">제목</th>
+											<th>작성자</th>
 											<!-- <td>등록일</td>
 											<td>조회수</td> -->
 										</tr>
@@ -470,7 +442,8 @@ ul#menu {
 										<c:forEach items="${viewAll }" var="list">
 											<tr style = "cursor:pointer;" onClick = "location.href='view?idx=${list.idx }'">
 												
-												<td>${list.idx }</td>
+												<%-- <td>${list.idx }</td> --%>
+												<td></td>
 												<td>${list.title }
 												<td>${list.writer }</td>
 											<%-- 	<td><fmt:formatDate value="${list.reg_date }"
