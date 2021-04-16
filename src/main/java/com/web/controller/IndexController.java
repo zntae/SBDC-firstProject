@@ -195,7 +195,6 @@ public class IndexController {
 			vo = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 			model.addAttribute("paging", vo);
 			model.addAttribute("viewAll", s.getBoardSave(vo));		
-			System.out.println("sssss");
 			return "saveBoard";
 		}
 	 @RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
@@ -238,6 +237,7 @@ public class IndexController {
 			s.boardUpdate(new Board(idx, title, contents, file.getOriginalFilename(), 0, PATH , PATH, 0, PATH));
 			return "saveBoard";
 		}
+
 	 
 	
 }

@@ -226,8 +226,6 @@ ul#menu {
 				})
 				$("#updateBtn").click(function() {
 					
-					alert("IDX --> " + IDX);
-					
 					location.href = "updateAction";
 				})
 			});
