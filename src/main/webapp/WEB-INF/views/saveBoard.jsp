@@ -299,7 +299,27 @@ ul#menu {
 				$('.dataTables_length').addClass('bs-select');
 				});
 				
-				
+
+				$("#searchBtn").click(function() {
+					alert('1');
+					alert($("#searchForm").val());
+					$.ajax({
+						url : "SearchboardList",
+						data : { keywordInput : $("#keywordInput").val(),
+							     searchType : $("#searchForm").val()}
+					}).done((result)=>{
+						var html333 = "<table> <tbody>";
+						result.map(x=>{
+							html333 +=	"<tr> <td>"+x.idx+"</td>"+ "<td>" +x.title + "</td>" + "<td>" + x.writer + "</td></tr>"
+						})
+					
+						html333 += "</tbody> </table>";
+						$("#tbody-tt").html(html333);
+					
+						
+						});				
+
+				});
 				$("#writeBtn").click(function() {
 					location.href = "write";
 				})
@@ -391,12 +411,15 @@ ul#menu {
 								<div style="margin:10px 0 -10px" class="container">
 									<div class="row">
 										<div style="margin:0 1px" class="span2">
-											<select class="form-control" name="searchType">
+											
+											<select id="searchForm" class="form-control" name="searchType">
 												<option value="t"
 													<c:out value="${searchType eq 't' ? 'selected' : ''}"/>>제목</option>
 												<option value="w"
 													<c:out value="${searchType eq 'w' ? 'selected' : ''}"/>>작성자</option>
 											</select>
+										
+											
 										</div>
 
 										<div style="margin:0 5px" class="span8">
@@ -405,14 +428,16 @@ ul#menu {
 										</div>
 
 										<div class="span2">
-											<button id="searchBtn" type="submit"
+											<button id="searchBtn" type="submit" 
 												class="btn btn-outline-info">검색</button>
+												
 										</div>
 									</div>
 								</div>
 							</i>
 						</div>
 						<!-- 검색 끝-->
+
 
 						<div class="card-body">
 							<div class="table-responsive">

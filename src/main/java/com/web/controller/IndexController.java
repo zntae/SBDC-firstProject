@@ -126,7 +126,7 @@ public class IndexController {
 			file.transferTo(new File(PATH + file.getOriginalFilename()));
 		}		
 		Board tt = new Board(0, title, contents, writer, 0, PATH , status, 0, PATH);		
-		System.out.println(tt.getStatus());
+		
 		s.addBoard(tt);
 		return "index";
 	}
@@ -207,7 +207,7 @@ public class IndexController {
 		 	map.put("temp", tempBoard);
 		 	map.put("save", saveBoard);
 		 	map.put("del", deleteBoard);
-		 	System.out.println("ss");
+		 	
 			return map;
 		}			
 	 @RequestMapping(value = "/countDashBoard", method = RequestMethod.GET)
@@ -220,24 +220,52 @@ public class IndexController {
 		 	num.add(tempBoard);
 		 	num.add(saveBoard);
 		 	num.add(deleteBoard);
-		 	System.out.println(tempBoard);
+		 	
 			return num;
 		}
 	 
 	 @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
 		public String updateAction(HttpServletRequest req, @RequestParam("file") MultipartFile file,
-				@RequestParam("title") String title, @RequestParam("contents") String contents,@RequestParam("idx") int idx)
+				@RequestParam("title") String title, @RequestParam("contents") String contents,@RequestParam("idx") int idx,
+				@RequestParam("writer") String writer)
 				throws IllegalStateException, IOException {
 			String PATH = req.getSession().getServletContext().getRealPath("/") + "resources/images" ;
-			System.out.println(PATH);
+			
 			if (!file.getOriginalFilename().isEmpty()) {
 				file.transferTo(new File(PATH + file.getOriginalFilename()));
 			}
 			
-			s.boardUpdate(new Board(idx, title, contents, file.getOriginalFilename(), 0, PATH , PATH, 0, PATH));
-			return "saveBoard";
+			s.boardUpdate(new Board(idx, title, contents, writer, 0, PATH , PATH, 0, PATH));
+			return "redirect:saveBoard";
 		}
+	 @RequestMapping(value = "/SearchboardList", method = RequestMethod.GET)
+	 @ResponseBody
+		public List<Board> boardList(PagingVO vo, Model model
+				, @RequestParam(value="nowPage", required=false)String nowPage
+				, @RequestParam(value="cntPerPage", required=false)String cntPerPage
+				, @RequestParam(value="keywordInput", required=false) String keywordInput
+				, @RequestParam(value="searchType", required=false) String searchType) {
+		 	
+		 	String check = "C";
+		 	int total = s.countBoard(check);
+		 	
+			if (nowPage == null && cntPerPage == null) {
+				nowPage = "1";
+				cntPerPage = "5";
+			} else if (nowPage == null) {
+				nowPage = "1";
+			} else if (cntPerPage == null) { 
+				cntPerPage = "5";
+			}
+			vo = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
+			model.addAttribute("paging", vo);
+		 	model.addAttribute("viewAll", s.searchBoard(vo, keywordInput, searchType));
+		 	System.out.println(vo);
+		 	System.out.println(keywordInput);
+		 	System.out.println(searchType);
+			return s.searchBoard(vo, keywordInput, searchType);
+		}
+			
 
-	 
 	
 }

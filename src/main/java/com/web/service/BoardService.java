@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.domain.Board;
+import com.web.domain.BoardDTO;
 import com.web.domain.Reply;
 import com.web.mapper.BoardMapper;
 import com.web.utils.PagingVO;
@@ -35,6 +36,9 @@ public class BoardService {
 	}
 	public int countBoard(String status) {
 		return m.countBoard(status);
+	}
+	public int countBoard() {
+		return m.countBoard();
 	}
 	public List<Board> selectBoard(PagingVO vo) {
 		return m.selectBoard(vo);
@@ -73,5 +77,12 @@ public class BoardService {
 	}
 	public boolean boardUpdate(Board b) {
 		return m.boardUpdate(b);
+	}
+	public List<Board> searchBoard(PagingVO vo, String keywordInput, String searchType) {
+		BoardDTO tt = new BoardDTO(vo, keywordInput, searchType);
+	 	System.out.println(vo);
+	 	System.out.println(keywordInput);
+	 	System.out.println(searchType);
+		return m.searchBoard(tt);
 	}
 }

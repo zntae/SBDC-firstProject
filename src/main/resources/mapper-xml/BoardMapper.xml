@@ -292,5 +292,27 @@ CREATE TABLE `tb_board` (
 	  WHERE IDX = #{idx}
     </update>
     <!-- 2021.04.16 박민지 추가 -->
-	
+	<select id="searchBoard" resultType = "com.web.domain.Board" parameterType="com.web.domain.BoardDTO">
+	SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (		
+					SELECT idx, 
+						   title, 
+						   writer, 
+						   reg_date
+					  FROM board
+					 WHERE 1 = 1
+					 <if test="searchType eq 't'.toString()">
+					   AND title 
+					 </if>
+					 <if test="searchType eq 'w'.toString()">
+					   AND WRITER 
+					 </if>
+					   LIKE '%' || #{keywordInput} || '%'
+					  ORDER BY idx 	
+					) A
+				)
+		WHERE RN BETWEEN #{vo.start} AND #{vo.end}	
+	</select>
 </mapper>

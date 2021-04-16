@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.web.domain.Board;
+import com.web.domain.BoardDTO;
 import com.web.domain.Reply;
 import com.web.utils.PagingVO;
 
@@ -17,6 +18,7 @@ public interface BoardMapper {
 	public List<Reply> getReply(int boardIdx);
 	public boolean boardDelete(int idx);
 	public int countBoard(String status);
+	public int countBoard();
 	public List<Board> selectBoard(PagingVO vo);
 	public List<Board> getBoardDelete(PagingVO vo);
 	public List<Board> getBoardTemp(PagingVO vo);
@@ -29,5 +31,7 @@ public interface BoardMapper {
 	public int countTemp();
 	public int countSave();
 	public int countDelete();
+	public List<Board> searchBoard(BoardDTO tt);
+	
 }
 
