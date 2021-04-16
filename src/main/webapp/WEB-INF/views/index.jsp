@@ -166,13 +166,28 @@ ul#menu {
 	color: white;
 }
 
-.right-text {
+#tempCount {
 	text-align: center;
 	font-size: large;
 	color: white;
 	display: flex;
 	align-items: center;
 }
+#saveCount {
+	text-align: center;
+	font-size: large;
+	color: white;
+	display: flex;
+	align-items: center;
+}
+#deleteCount {
+	text-align: center;
+	font-size: large;
+	color: white;
+	display: flex;
+	align-items: center;
+}
+
 
 .table {
 	width: 100% !important;
@@ -185,32 +200,49 @@ ul#menu {
 					location.href = "write";
 				})
 				$.ajax({
-					url : "boardList",
+					url : "dashBoard",
 					success : function(result) {
 						console.log(result);
-						var html = "";
-						result.forEach(function(item) {
-							html += "<tr> <td><a href = 'view?idx=" + item.idx
+						var tempHtml = "";
+						var saveHtml = "";
+						var delHtml = "";
+						result.temp.forEach(function(item) {
+							tempHtml += "<tr> <td><a href = 'view?idx=" + item.idx
 									+ "'>" + item.title + "</a>" + "</td>"
-									+ "<td>" + item.contents + "</td></tr>"
+									+ "<td>" + item.writer + "</td></tr>"
 						})
-						$("#listArea1").append(html);
-						$("#listArea2").append(html);
-						$("#listArea3").append(html);
+						result.save.forEach(function(item) {
+							saveHtml += "<tr> <td><a href = 'view?idx=" + item.idx
+									+ "'>" + item.title + "</a>" + "</td>"
+									+ "<td>" + item.writer + "</td></tr>"
+						})
+						result.del.forEach(function(item) {
+							delHtml += "<tr> <td><a href = 'view?idx=" + item.idx
+									+ "'>" + item.title + "</a>" + "</td>"
+									+ "<td>" + item.writer + "</td></tr>"
+						})
+						$("#listArea1").append(tempHtml);
+						$("#listArea2").append(saveHtml);
+						$("#listArea3").append(delHtml);
 						$('#example').DataTable();
+					}
+				});	
+				
+				
+				
+				$.ajax({
+					url : "countDashBoard",
+					success : function(result) {
+						console.log(result);
+						$("#tempCount").append(result[0]);
+						$("#saveCount").append(result[1]);
+						$("#deleteCount").append(result[2]);
 					}
 				});
 				$("#deleteBtn").click(function() {
 					location.href = "write";
 				})
 			});
-	/* 
-	 html+= "<tr> <td><a href = 'view?idx=" + item.idx + "'>" + item.title + "</a></td> </tr>"
-	 + "<button type='button' class='btn btn-primary' align='right' id = 'deleteBtn'>글삭제</button></td> </tr>"
-	 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-	 
-	 navbar-expand navbar-light bg-light bd-navbar
-	 */
 </script>
 
 
@@ -270,10 +302,10 @@ ul#menu {
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='tempBoard'">
 				<div class="left-text">임시저장</div>
-				<div class="right-text">건수 : 100개</div>
+				<div id="tempCount">건수 : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='tempBoard'">
-				<div class="container" style="margin-top: 30px">
+				<div class="container" >
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"
@@ -298,10 +330,10 @@ ul#menu {
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='saveBoard'">
 				<div class="left-text">완료</div>
-				<div class="right-text">건수 : 100개</div>
+				<div id="saveCount">건수 : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='saveBoard'">
-				<div class="container" style="margin-top: 30px">
+				<div class="container" >
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"
@@ -326,11 +358,11 @@ ul#menu {
 		<div class="cardwrap">
 			<div class="textwrap" onClick="location.href='deleteBoard'">
 				<div class="left-text">삭제</div>
-				<div class="right-text">개수 : 100개</div>
+				<div id="deleteCount">건수 : </div>
 			</div>
 			<div class="boardwrap" onClick="location.href='deleteBoard'">
 
-				<div class="container" style="margin-top: 30px">
+				<div class="container" >
 					<div class="row">
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped" id="example"

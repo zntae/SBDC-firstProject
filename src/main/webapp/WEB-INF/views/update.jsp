@@ -15,6 +15,10 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel='stylesheet'
 	href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 
 <style>
 body {
@@ -176,45 +180,63 @@ ul#menu {
 }
 </style>
 <script type="text/javascript">
+	var IDX = getQueryStringObject().idx;
+	function getQueryStringObject() {
+		var a = window.location.search.substr(1).split('&');
+		if (a == "")
+			return {};
+		var b = {};
+		for (var i = 0; i < a.length; ++i) {
+			var p = a[i].split('=', 2);
+			if (p.length == 1)
+				b[p[0]] = "";
+			else
+				b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+		}
+		return b;
+	} // 연구해보기
+	
+
+
+	$.ajax({
+		url : "boardView?idx=" + IDX,
+		success : function(result) {
+			$("#image").append(
+					'<img src="resources/images/' + result.image
+							+ '" style="width: 100%;">');
+			$("#title").text(result.title);
+			$("#contents").text(result.contents);
+			$("#writer").text(result.writer);
+			document.getElementById("title").value = result.title;
+			document.getElementById("contents").value = result.contents;
+			document.getElementById("writer").value = result.writer;
+			document.getElementById("idx").value = result.idx;
+			console.log(idx);
+		}
+	});
+
 	$(document).ready(
 			function() {
 				$("#writeBtn").click(function() {
 					location.href = "write";
 				})
-				$.ajax({
-					url : "boardList",
-					success : function(result) {
-						console.log(result);
-						var html = "";
-						result.forEach(function(item) {
-							html += "<tr> <td><a href = 'view?idx=" + item.idx
-									+ "'>" + item.title + "</a>" + "</td>"
-									+ "<td>" + item.contents + "</tr>"
-						})
-						$("#listArea1").append(html);
-						$("#listArea2").append(html);
-						$("#listArea3").append(html);
-						$('#example').DataTable();
-					}
-				});
+				
 				$("#deleteBtn").click(function() {
 					location.href = "write";
 				})
 				$("#updateBtn").click(function() {
-					location.href = "update";
+					
+					alert("IDX --> " + IDX);
+					
+					location.href = "updateAction";
 				})
 			});
-	/* 
-	 html+= "<tr> <td><a href = 'view?idx=" + item.idx + "'>" + item.title + "</a></td> </tr>"
-	 + "<button type='button' class='btn btn-primary' align='right' id = 'deleteBtn'>글삭제</button></td> </tr>"
-	 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-	 */
+	console.log(IDX);
+	console.log(IDX);
+	console.log(IDX);
+	
 </script>
 
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 	<header class="navbar navbar-custom">
@@ -270,31 +292,33 @@ ul#menu {
 							수정하기</a>
 					</h3>
 				</div>
-				<form action="writeAction" method="POST" enctype="multipart/form-data">
+				
+				<form action="updateAction" method="POST" enctype="multipart/form-data">
+				<input type="hidden" id = "idx" value = "" class="form-control" name="idx"/>
 					<div class="form-group">
-						<label for="usr">제목</label>
-							<input type="text" value='title' class="form-control" id="title" name="title">
+						<label for="usr"><a	style="font-weight: bold; color: #4e859c">Title</a></label>
+						<input type="text" value = ""  class="form-control" id="title" name="title" required>
 					</div>
-					<!-- 새로 -->
+
 					<div class="form-group">
-						<label for="usr">작성자</label>
-							<input type="text" value='writer' class="form-control" id="writer" name="writer">
+						<label for="usr"><a	style="font-weight: bold; color: #4e859c">Writer</a></label> 
+						<input type="text" value = "" class="form-control" id="writer" name="writer" required>
 					</div>
-					<!-- 새로 -->
+
 					<div class="form-group">
 						<input type="file" class="form-control-file border" name="file">
 					</div>
 					<div class="form-group">
-						<label for="comment">내용</label>
-							<textarea class="form-control" rows="5"  value='contents' id="contents" name="contents"></textarea>
+						<label for="comment"><a	style="font-weight: bold; color: #4e859c">Comment</a></label>
+						<textarea class="form-control" rows="5" value = "" id="contents" name="contents" placeholder="내용을 입력해주세요"></textarea>
 					</div>
 					<div class=”btn-group” role=”group” aria-label=”…”>
 						<div class="form-row float-left">
-						<button type=submit class="btn btn-info">수정하기</button>
-					 	</div>
+							<button type=submit id = "updateBtn" >수정하기</button>
+						</div>
 						<div class="form-row float-right">
-						<button type=submit class="btn btn-info" id="tempSave" >임시저장</button>
-					 	</div>
+							<button type=submit class="btn btn-outline-info" >Temp </button>
+						</div>
 					</div>
 				</form>
 			</div>

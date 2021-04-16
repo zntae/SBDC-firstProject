@@ -27,7 +27,49 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <style>
-h2 {
+
+div#boardlists{
+	width: 120%;
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.15);
+	
+}
+a:link {
+	text-decoration: none;
+	color: #000000;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #888888;
+}
+
+a:active {
+	text-decoration: none;
+	color: #00a0a0;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #008080;
+}
+
+/*
+	   a:link 클릭하지 않았을 때 링크 상태
+
+       a:visited 한번 클릭했거나 들어가보았던 링크 상태
+
+       a:active 링크 부분에서 마우스를 누르고 있는 상태
+
+       a:hover 링크를 클릭하려고 마우스를 가져갔을 때 상태
+
+       text-decoration ->underline ; 밑줄, none ; 밑줄 없음
+
+ */
+ 
+h2{
 	color: #008080;
 	text-align: center;
 	margin: 10px 5px 30px;
@@ -35,6 +77,11 @@ h2 {
 
 table {
 	width: 100%;
+
+}
+
+thead{
+		text-align : center;
 }
 
 #outter {
@@ -56,13 +103,13 @@ input[type=button] {
 
 /* outline 버튼 */
 .info {
-  border-color: #008080;
-  color: #008080;
+	border-color: #008080;
+	color: #008080;
 }
 
 .info:hover {
-  background: #008080;
-  color: white;
+	background: #008080;
+	color: white;
 }
 
 body {
@@ -223,17 +270,22 @@ ul#menu {
 	width: 100% !important;
 }
 </style>
+
+<script>
+
+	function selChange() {
+		var sel = document.getElementById('cntPerPage').value;
+		location.href = "deleteBoard?nowPage=${paging.nowPage}&cntPerPage=" + sel;
+	}
+</script>
+
 <script type="text/javascript">
 	$(document)
 			.ready(
 					
-	function() {
+					function() {
 						$("#writeBtn").click(function() {
 							location.href = "write";
-						})
-
-						$("#restoreBtn").click(function() {
-							location.href = "restore";
 						})
 
 						$
@@ -266,12 +318,15 @@ ul#menu {
 
 						$("#restoreBtn").click(function() {
 
-							var deleteYN = confirm("삭제하시겠습니까?");
+							var deleteYN = confirm("복구하시겠습니까?");
 							if (deleteYN == true) {
 
 								location.href = "restore";
+								<!-- "location.href='/restore'" -->
 
 							}
+							else
+								location.href="deleteBoard";
 
 						})
 
@@ -329,13 +384,13 @@ ul#menu {
 	<div class="container" style="margin-top: 30px">
 		<div class="row">
 			<div class="col-sm-12">
-				<h2 >삭제된 게시물</h2>
+				<h2>삭제된 게시물</h2>
 
 				<div id="outter">
 
 					<!-- 목록시작 -->
 
-					<div class="card mb-12">
+					<div class="card mb-12" id="boardlists">
 						<div class="card-header">
 							<i class="fas fa-table mr-3"> 
 							
@@ -360,6 +415,7 @@ ul#menu {
 											<button id="searchBtn" type="submit"
 												class="btn btn-outline-info">검색</button>
 										</div>
+
 									</div>
 								</div>
 							</i>
@@ -385,26 +441,27 @@ ul#menu {
 
 								<!-- 글목록 -->
 								<!-- 테이블 디자인 클래스 적용 확인 class="table table-striped table-bordered" -->
-								<table id="dataTable" border="1">
+								<table class="table table-striped table-bordered" id="dataTable" border="1">
 									<thead>
 										<tr>
+											<td width="5%"> </td>
 											<td>글번호</td>
 											<td width="50%">제목</td>
 											<td>작성자</td>
 										<!-- 	<td>등록일</td>
 											<td>조회수</td>
-										 --></tr>
+										 -->
+										 </tr>
+									</thead>
 									<tbody>
-										<%-- <c:if test="${status eq '삭제'}"> --%>
+										<%-- <c:if test="${status eq 'D'}"> --%>
 										<c:forEach items="${viewAll }" var="list">
 											<tr>
+												<td><input type="checkbox" name="checkedidx" value="${list.idx }"/></td>
 												<td>${list.idx }</td>
 												<td><a href='view?idx=${list.idx }'>${list.title }</a>
 
-													<!-- 복구 버튼 --> <input type="button"
-													class="btn btn-outline-info" id="restoreBtn" value="복구"
-													style="float: right;" onclick="location.href='/restore'">
-												</td>
+													</td>
 												<td>${list.writer }</td>
 												<%-- <td><fmt:formatDate value="${list.reg_date }"
 														pattern="yyyy.MM.dd" /></td>
@@ -420,15 +477,29 @@ ul#menu {
 						</div>
 					</div>
 
-					<!-- 글쓰기 버튼 -->
-					<input type="button" class="btn btn-outline-info" id="writeBtn"
-						value="글쓰기" style="float: right;" onclick="location.href='/write'"><br>
 
-					<!-- 페이지네이션 -->
+					<div class="col" margin-left="500px">
+						<div>
+							<!-- 글쓰기 버튼 -->
+							<input type="button" class="btn btn-outline-info" id="writeBtn"
+								value="글쓰기" style="float: right;"
+								onclick="location.href='/write'">
+						</div>
+
+						
+						<div>
+							<!-- 복구 버튼 -->
+							<input type="button" class="btn btn-outline-info" id="restoreBtn"
+								value="복구" style="float: right;">
+								
+						</div>
+					</div>
+
+				<!-- 페이지네이션 -->
 					<div style="display: block; text-align: center;">
 						<c:if test="${paging.startPage != 1 }">
 							<a
-								href="/deleteBoard?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}">&lt;</a>
+								href="/web/deleteBoard?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}">&lt;</a>
 						</c:if>
 						<c:forEach begin="${paging.startPage }" end="${paging.endPage }"
 							var="p">
@@ -456,7 +527,7 @@ ul#menu {
 	<footer class="footer">
 		<p style="color: black; text-align: left;">
 		<div
-			style="width: 250px; height: 50px; float: left; margin-left: 430px; margin-right: 100px">
+			style="width: 250px; height: 50px; float: left; margin-left: 480px; margin-right: 100px">
 			<img class="sbdc" alt="SBDC" width="250" height="50" align="middle"
 				hspace="50"
 				src="https://www.sbdc.or.kr/assets/images/footer/footer-logo.png">

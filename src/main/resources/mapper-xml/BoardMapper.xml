@@ -21,7 +21,33 @@ CREATE TABLE `tb_board` (
  -->
 <mapper namespace="com.web.mapper.BoardMapper">
 
+    <!-- 210415 박민지 추가 -->
+    
     <insert id="addBoard">
+		INSERT INTO 
+	    	board
+	   			(
+	               title,
+	               contents,
+	               writer,              
+	               reg_date,
+	               status,
+	               file_path
+				)
+	    	VALUES
+	   			(
+	   				#{title},
+	   				#{contents},
+	   				#{writer},
+	   				sysdate,
+	   				#{status},
+	   				#{file_path}	
+	   				
+				)
+    </insert>
+    
+    
+    <insert id="addBoardTemp">
 		INSERT INTO 
 	    	board
 	   			(
@@ -38,7 +64,7 @@ CREATE TABLE `tb_board` (
 	   				#{contents},
 	   				'writer',
 	   				sysdate,
-	   				'C',
+	   				#{status},
 	   				#{file_path}	
 	   				
 				)
@@ -49,9 +75,62 @@ CREATE TABLE `tb_board` (
 		SET STATUS='D', 
        		ISDELETE=1
 		WHERE IDX = #{idx}
-    
-    
     </update>
+    
+    
+    <select id="getBoardDelete" resultType="com.web.domain.Board">
+			SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (
+						SELECT * 
+						FROM BOARD 
+						WHERE status='D'
+						ORDER BY idx desc, reg_date desc
+						) A
+				)
+		WHERE RN BETWEEN #{start} AND #{end};
+               
+		
+	</select>
+	
+	
+	 <select id="getBoardTemp" resultType="com.web.domain.Board">
+				SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (
+						SELECT * 
+						FROM BOARD 
+						WHERE status='T'
+						ORDER BY idx desc, reg_date desc
+						) A
+				)
+		WHERE RN BETWEEN #{start} AND #{end};
+		
+	</select>
+	
+	
+	<select id="getBoardSave" resultType="com.web.domain.Board">
+				SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (
+						SELECT * 
+						FROM BOARD 
+						WHERE status='C'
+						ORDER BY idx desc, reg_date desc
+						) A
+				)
+		WHERE RN BETWEEN #{start} AND #{end};
+		
+	</select>
+    
+
+    
+    <!-- 210415 박민지 추가 -->
+    
+    
     
 	<select id="getBoard" resultType="com.web.domain.Board">
 		SELECT
@@ -113,7 +192,7 @@ CREATE TABLE `tb_board` (
 	</select>
 	<!-- 총 게시글 갯수 출력 -->
 	<select id="countBoard" resultType="int">
-	SELECT COUNT(*) FROM BOARD
+	SELECT COUNT(*) FROM BOARD WHERE status = #{status}
 	</select>
 
 <!-- 페이징 처리 후 게시글 조회 -->
@@ -129,4 +208,89 @@ CREATE TABLE `tb_board` (
 				)
 		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
+	<select id="getTempBoard" resultType="com.web.domain.Board">
+		SELECT
+			   idx,
+               title,
+               writer,              
+		FROM
+			board
+		WHERE
+			status = 'T'
+		ORDER BY reg_date desc
+		limit 5
+		
+	</select>
+	
+		<select id="getSaveBoard" resultType="com.web.domain.Board">
+		SELECT
+			   idx,
+               title,
+               writer,              
+		FROM
+			board
+		WHERE
+			status = 'C'
+		ORDER BY reg_date desc
+		limit 5
+		
+	</select>
+	
+		<select id="getDeleteBoard" resultType="com.web.domain.Board">
+			SELECT
+			   idx,
+               title,
+               writer,              
+		FROM
+			board
+		WHERE
+			status = 'D'
+		ORDER BY reg_date desc
+		limit 5
+		
+	</select>
+	
+
+
+	
+	<select id="countTemp" resultType="int">
+		SELECT
+			   count(*)            
+		FROM
+			board
+		WHERE
+			status = 'T'
+		
+	</select>
+	
+		<select id="countSave" resultType="int">
+		SELECT
+			 count(*)           
+		FROM
+			board
+		WHERE
+			status = 'C'
+		
+	</select>
+	
+		<select id="countDelete" resultType="int">
+			SELECT
+			count(*)             
+		FROM
+			board
+		WHERE
+			status = 'D'
+		
+	</select>
+	
+	 <!-- 2021.04.16 박민지 수정 추가 -->
+    <update id="boardUpdate">
+	  UPDATE BOARD
+	  SET TITLE = #{title}, 
+	         WRITER = #{writer},
+	         CONTENTS = #{contents}
+	  WHERE IDX = #{idx}
+    </update>
+    <!-- 2021.04.16 박민지 추가 -->
+	
 </mapper>

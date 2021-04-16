@@ -221,11 +221,13 @@ ul#menu {
 		return b;
 	} // 연구해보기
 
+	
+	
 	/* 댓글관련 */
 	function drawReply(replys) {
-		$("#cnt").text("등록된 댓글 - " + replys.length)
+		$("#cnt").text("Comments : " + replys.length)
 		var html = '';
-		html += '<form class="form-inline" action="writeReply" method="post"><input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "0"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="답글" name="contents"><button type="submit" class="btn btn-primary mb-2">등록</button></form>';
+		html += '<form class="form-inline" action="writeReply" method="post"><input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "0"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="Comments" name="contents"><button type="submit" class="btn btn-outline-info">Add</button></form>';
 
 		replys
 				.forEach(function(reply) {
@@ -238,7 +240,7 @@ ul#menu {
 						html += '<div class="row"><div class="col-sm-12">';
 						html += '<form class="form-inline" action="writeReply" method="post"><label for="pwd" class="mr-sm-2">'
 								+ reply.contents + '(' + rc + ')' + '</label>'
-						html += '<input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "' + reply.idx + '"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="답글" name="contents"><button type="submit" class="btn btn-primary mb-2">등록</button></form>';
+						html += '<input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "' + reply.idx + '"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="Comments" name="contents"><button type="submit" class="btn btn-outline-info">Add</button></form>';
 						html += '<div class="row"><div class="col-sm-12 sub' + reply.idx + '"></div></div></div></div>';
 					}
 				})
@@ -255,7 +257,7 @@ ul#menu {
 						subHtml = '<div class="row"><div class="col-sm-12 subReply">';
 						subHtml += '<form class="form-inline" action="writeReply" method="post"><label for="pwd" class="mr-sm-2">'
 								+ reply.contents + '(' + rc + ')' + '</label>'
-						subHtml += '<input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "' + reply.idx + '"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="답글" name="contents"><button type="submit" class="btn btn-primary mb-2">등록</button></form>';
+						subHtml += '<input type="hidden" name="idx" value = "' + IDX + '"><input type="hidden" name="replyIdx" value = "' + reply.idx + '"><input type="text" class="form-control mb-2 mr-sm-2" id="contents" placeholder="Comments" name="contents"><button type="submit" class="btn btn-outline-info">Add</button></form>';
 						subHtml += '<div class="row"><div class="col-sm-12 sub' + reply.idx + '"></div></div></div></div>';
 						$(".sub" + reply.replyIdx).append(subHtml);
 					}
@@ -284,6 +286,8 @@ ul#menu {
 			drawReply(replys)
 		}
 	});
+	
+
 </script>
 <script type="text/javascript">
 	$(document)
@@ -292,31 +296,13 @@ ul#menu {
 						$("#writeBtn").click(function() {
 							location.href = "write";
 						})
-						$
-								.ajax({
-									url : "boardList",
-									success : function(result) {
-										var html = "";
-										result
-												.forEach(function(item) {
-													html += "<tr> <td><a href = 'view?idx="
-															+ item.idx
-															+ "'>"
-															+ item.title
-															+ "</a>"
-															+ "<button type='button' class='btn btn-danger' style='float: right;' id = 'deleteBtn' onclick = 'location.href = 'view?idx='"
-															+ item.idx
-															+ "'>글삭제</button></td> </tr>"
-												})
-										$("#listArea").append(html)
-										$('#example').DataTable();
-									}
-								});
+					
 						$("#deleteBtn").click(function() {
 							location.href = "write";
 						})
 						$("#updateBtn").click(function() {
-							location.href = "update";
+							alert("수정하기게시판");
+							location.href = "update?idx=" + IDX;
 						})
 					});
 	/*
@@ -371,76 +357,48 @@ ul#menu {
 		</div>
 	</div>
 
-	<!-- 기존 뷰
 	<div class="container" style="margin-top: 30px">
 		<div class="row">
-			<div class="col-sm-12">
-				<h2>본문</h2>
-			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 60%"><a style="color: #4e859c">Number</a>
+						<h5 id="idx"></h5>
+							<br>
+						<a style="color: #4e859c">Title</a>
+						<h5 id="title"></h5>
+							<br> <a style="color: #4e859c">Writer</a>
+						<h5 id="writer"></h5></th>
+						<th scope="col" style="width: 40%" class="text-right"><a
+							style="color: #4e859c">Count</a>
+						<h5 id="count"></h5> <br>
+						<a style="color: #4e859c">Date</a>
+						<h5 id="reg_date" ></h5></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><div id="image"></div>
+							<br>
+						<pre id="contents"></pre></td>
+
+					</tr>
+					<tr>
+						<td><div id="cnt"></div>
+							<br>
+						<pre id="replyArea"></pre></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-		<div class="row">
-			<div class="col-sm-6">
-				<div id="image"></div>
-			</div>
-			<div class="col-sm-6">
-				<div class="row">
-					<div class="col-sm-12">
-						<h2 id="title"></h2>
-					</div>
-					<div class="col-sm-12">
-						<pre id="contents"></pre>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12">
-				<h2 id="cnt"></h2>
-				<div id="replyArea"></div>
-			</div>
-		</div>
-	</div>
-	 -->
-	<div class="container" style="margin-top: 30px">
+		
 		<div class="row">
 			<div class="col">
 				<div class="form-row float-left">
-					<h2 id="title">제목 :</h2>
+					<button type=button class="btn btn-outline-info" id="updateBtn" > Edit</button>
 				</div>
 				<div class="form-row float-right">
-					<h4 id="idx"></h4>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div class="form-row float-left">
-					<h3 id="writer">작성자 :</h3>
-					<h3 id="reg_date">등록일 :</h3>
-				</div>
-				<div class="form-row float-right">
-					<h4 id="count">조회수 :</h4>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div id="image"></div>
-				<pre id="contents"></pre>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div>
-					<h2 id="cnt"></h2>
-					<div id="replyArea"></div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div class="form-row float-right">
-					<button type=submit class="btn btn-outline-info">수정하기</button>
+					<button type=button class="btn btn-outline-info" id="deleteBtn" onclick="location.href='http://webtong.kr' ">Delete</button>
 				</div>
 			</div>
 		</div>

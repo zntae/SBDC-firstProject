@@ -3,7 +3,9 @@ package com.web.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,12 @@ public class IndexController {
 
 		return "mainBoard";
 	}
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
+	public String update() {
+
+		return "update";
+	}
+
 
 //	@RequestMapping(value = "/saveBoard", method = RequestMethod.GET)
 //	public String saveBoard() {
@@ -78,19 +86,6 @@ public class IndexController {
 		return "view";
 	}
 
-	@RequestMapping(value = "/writeAction", method = RequestMethod.POST)
-	public String writeAction(HttpServletRequest req, @RequestParam("file") MultipartFile file,
-			@RequestParam("title") String title, @RequestParam("contents") String contents)
-			throws IllegalStateException, IOException {
-		String PATH = req.getSession().getServletContext().getRealPath("/") + "resources/images" ;
-		System.out.println(PATH);
-		if (!file.getOriginalFilename().isEmpty()) {
-			file.transferTo(new File(PATH + file.getOriginalFilename()));
-		}
-
-		s.addBoard(new Board(0, title, contents, file.getOriginalFilename(), 0, PATH , PATH, 0, PATH));
-		return "index";
-	}
 
 	@RequestMapping(value = "/boardList", method = RequestMethod.GET)
 	@ResponseBody
@@ -117,16 +112,39 @@ public class IndexController {
 		return "redirect:view?idx=" + idx;
 	}
 	
-	@RequestMapping(value = "/boardDelete", method = RequestMethod.POST)
+	/*박민지 수정*/
+	
+
+	@RequestMapping(value = "/writeAction", method = RequestMethod.POST)
+	public String writeAction(HttpServletRequest req, @RequestParam("file") MultipartFile file,
+			@RequestParam("title") String title, @RequestParam("contents") String contents, @RequestParam("status") String status,
+			@RequestParam("writer") String writer)
+			throws IllegalStateException, IOException {
+		String PATH = req.getSession().getServletContext().getRealPath("/") + "resources/images" ;
+		
+		if (!file.getOriginalFilename().isEmpty()) {
+			file.transferTo(new File(PATH + file.getOriginalFilename()));
+		}		
+		Board tt = new Board(0, title, contents, writer, 0, PATH , status, 0, PATH);		
+		System.out.println(tt.getStatus());
+		s.addBoard(tt);
+		return "index";
+	}
+	
+	
+	@RequestMapping(value = "/boardDelete", method = {RequestMethod.GET, RequestMethod.POST})
 	public String delete(@RequestParam("idx") int idx) {
 		s.boardDelete(idx);
-		return "test";
+		return "redirect:deleteBoard";
 	}
-	 @GetMapping(value= "saveBoard")	 
-		public String saveBoard(PagingVO vo, Model model
+	
+	
+	 @GetMapping(value= "/deleteBoard")
+		public String deleteBoard(PagingVO vo, Model model
 				, @RequestParam(value="nowPage", required=false)String nowPage
 				, @RequestParam(value="cntPerPage", required=false)String cntPerPage) {
-			int total = s.countBoard();			
+		 	String deleteStatus = "D";
+			int total = s.countBoard(deleteStatus);
 			if (nowPage == null && cntPerPage == null) {
 				nowPage = "1";
 				cntPerPage = "5";
@@ -137,15 +155,16 @@ public class IndexController {
 			}
 			vo = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 			model.addAttribute("paging", vo);
-			model.addAttribute("viewAll", s.selectBoard(vo));
-			return "saveBoard";
+			model.addAttribute("viewAll", s.getBoardDelete(vo));
+			return "deleteBoard";
 		}
+	 
 	 @GetMapping(value= "/tempBoard")
 		public String tempBoard(PagingVO vo, Model model
 				, @RequestParam(value="nowPage", required=false)String nowPage
 				, @RequestParam(value="cntPerPage", required=false)String cntPerPage) {
-			
-			int total = s.countBoard();
+		 	String tempStatus = "T";
+			int total = s.countBoard(tempStatus);
 			if (nowPage == null && cntPerPage == null) {
 				nowPage = "1";
 				cntPerPage = "5";
@@ -156,15 +175,15 @@ public class IndexController {
 			}
 			vo = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 			model.addAttribute("paging", vo);
-			model.addAttribute("viewAll", s.selectBoard(vo));
+			model.addAttribute("viewAll", s.getBoardTemp(vo));			
 			return "tempBoard";
-		}
-	 @RequestMapping(value= "/deleteBoard", method = RequestMethod.GET)
-		public String deleteBoard(PagingVO vo, Model model
+		} 
+	 @GetMapping(value= "/saveBoard")
+		public String saveBoard(PagingVO vo, Model model
 				, @RequestParam(value="nowPage", required=false)String nowPage
 				, @RequestParam(value="cntPerPage", required=false)String cntPerPage) {
-			
-			int total = s.countBoard();
+			String saveStatus = "C";
+			int total = s.countBoard(saveStatus);
 			if (nowPage == null && cntPerPage == null) {
 				nowPage = "1";
 				cntPerPage = "5";
@@ -175,11 +194,50 @@ public class IndexController {
 			}
 			vo = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 			model.addAttribute("paging", vo);
-			model.addAttribute("viewAll", s.selectBoard(vo));
-			return "deleteBoard";
+			model.addAttribute("viewAll", s.getBoardSave(vo));		
+			System.out.println("sssss");
+			return "saveBoard";
 		}
-
-
-
+	 @RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
+		@ResponseBody	
+		public HashMap<String,List<Board>> dashBoard() {
+		  HashMap<String,List<Board>> map = new HashMap<String,List<Board>>();
+		 	List<Board> tempBoard = s.getTempBoard();
+		 	List<Board> saveBoard = s.getSaveBoard();
+		 	List<Board> deleteBoard = s.getDeleteBoard();
+		 	map.put("temp", tempBoard);
+		 	map.put("save", saveBoard);
+		 	map.put("del", deleteBoard);
+		 	System.out.println("ss");
+			return map;
+		}			
+	 @RequestMapping(value = "/countDashBoard", method = RequestMethod.GET)
+		@ResponseBody	
+		public ArrayList<Integer> countDashBoard() {
+		 	int tempBoard = s.countTemp();
+		 	int saveBoard = s.countSave();
+		 	int deleteBoard = s.countDelete();
+		 	ArrayList<Integer> num = new ArrayList<Integer>();
+		 	num.add(tempBoard);
+		 	num.add(saveBoard);
+		 	num.add(deleteBoard);
+		 	System.out.println(tempBoard);
+			return num;
+		}
+	 
+	 @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
+		public String updateAction(HttpServletRequest req, @RequestParam("file") MultipartFile file,
+				@RequestParam("title") String title, @RequestParam("contents") String contents,@RequestParam("idx") int idx)
+				throws IllegalStateException, IOException {
+			String PATH = req.getSession().getServletContext().getRealPath("/") + "resources/images" ;
+			System.out.println(PATH);
+			if (!file.getOriginalFilename().isEmpty()) {
+				file.transferTo(new File(PATH + file.getOriginalFilename()));
+			}
+			
+			s.boardUpdate(new Board(idx, title, contents, file.getOriginalFilename(), 0, PATH , PATH, 0, PATH));
+			return "saveBoard";
+		}
+	 
 	
 }

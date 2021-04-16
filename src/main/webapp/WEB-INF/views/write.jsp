@@ -212,6 +212,47 @@ ul#menu {
 				})
 			});
 </script>
+<script type="text/javascript">
+
+
+
+	$(document).ready(
+			function() {
+				$("#writeBtn").click(function() {
+					$("#status").val("C");
+					
+					location.href = "write";
+				})
+				$.ajax({
+					url : "boardList",
+					success : function(result) {
+						console.log(result);
+						var html = "";
+						result.forEach(function(item) {
+							html += "<tr> <td><a href = 'view?idx=" + item.idx
+									+ "'>" + item.title + "</a>" + "</td>"
+									+ "<td>" + item.contents + "</tr>"
+						})
+						$("#listArea").append(html);
+						$('#example').DataTable();
+					}
+				});
+				
+				$("#tempSave").click(function() {
+					alert("게시글이 임시저장 됩니다.");
+					$("#status").val("T");
+					location.href = "write";
+					
+				
+			})
+				$("#deleteBtn").click(function() {
+					location.href = "write";
+				})
+				$("#updateBtn").click(function() {
+					location.href = "update";
+				})
+			});
+</script>
 
 </head>
 <body>
@@ -264,20 +305,17 @@ ul#menu {
 				<div class="form-group">
 					<h3>
 						<a
-							style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; font-family: arial; color: teal">글
-							작성하기</a>
+							style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; font-family: arial; color: teal">Writing</a>
 					</h3>
 				</div>
-				<form action="writeAction" method="POST"
-					enctype="multipart/form-data">
-
+				<form action="writeAction" method="POST" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="usr"><a	style="font-weight: bold; font-size: 1.0em; line-height: 1.0em; font-family: arial; color: black">TITLE</a></label> <input type="text"
+						<label for="usr"><a	style="font-weight: bold; color: #4e859c">Title</a></label> <input type="text"
 							class="form-control" id="title" name="title"
 							placeholder="제목을 입력해주세요." required>
 					</div>
 					<div class="form-group">
-						<label for="usr">Writer</label> <input type="text"
+						<label for="usr"><a	style="font-weight: bold; color: #4e859c">Writer</a></label> <input type="text"
 							class="form-control" id="writer" name="writer"
 							placeholder="작성자를 입력해주세요." required>
 					</div>
@@ -285,17 +323,21 @@ ul#menu {
 						<input type="file" class="form-control-file border" name="file">
 					</div>
 					<div class="form-group">
-						<label for="comment">Comment</label>
+						<label for="comment"><a	style="font-weight: bold; color: #4e859c">Comment</a></label>
 						<textarea class="form-control" rows="5" id="contents"
 							name="contents" placeholder="내용을 입력해주세요"></textarea>
 					</div>
+					<div class="form-group">
+						<input  class="form-control-file border" id="status" name="status">
+					</div>
 					<div class=”btn-group” role=”group” aria-label=”…”>
 						<div class="form-row float-left">
-							<button type=submit class="btn btn-outline-info">Post Comment</button>
+							<button type=submit class="btn btn-outline-info" id="writeBtn">Post Comment</button>
 						</div>
 						<div class="form-row float-right">
 							<button type=submit class="btn btn-outline-info" id="tempSave">Temp </button>
 						</div>
+						
 					</div>
 				</form>
 			</div>

@@ -16,6 +16,18 @@ public interface BoardMapper {
 	public boolean addReply(Reply r);
 	public List<Reply> getReply(int boardIdx);
 	public boolean boardDelete(int idx);
-	public int countBoard();
+	public int countBoard(String status);
 	public List<Board> selectBoard(PagingVO vo);
+	public List<Board> getBoardDelete(PagingVO vo);
+	public List<Board> getBoardTemp(PagingVO vo);
+	public List<Board> getBoardSave(PagingVO vo);
+	public boolean addBoardTemp(Board b);
+	public boolean boardUpdate(Board b);
+	public List<Board> getTempBoard();
+	public List<Board> getSaveBoard();
+	public List<Board> getDeleteBoard();
+	public int countTemp();
+	public int countSave();
+	public int countDelete();
 }
+
